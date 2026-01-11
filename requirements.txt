@@ -1,0 +1,8 @@
+streamlit
+supabase
+requests
+cloudscraper
+trafilatura
+playwright
+google-generativeai
+python-dotenv
