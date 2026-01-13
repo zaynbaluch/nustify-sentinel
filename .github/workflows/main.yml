@@ -2,7 +2,7 @@ name: Daily Admissions Scan
 
 on:
   schedule:
-    - cron: '0 21 * * *'  # 3 AM PKT
+    - cron: '20 20 * * *'  # 3 AM PKT
   workflow_dispatch:
 
 jobs:
