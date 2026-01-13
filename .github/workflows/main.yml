@@ -2,23 +2,28 @@ name: Daily Admissions Scan
 
 on:
   schedule:
-    - cron: '20 20 * * *'  # 3 AM PKT
+    - cron: '20 20 * * *'  # 1:20 AM PKT
   workflow_dispatch:
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - run: |
+      - name: Install dependencies
+        run: |
           pip install -r requirements.txt
           playwright install chromium
 
-      - run: python worker.py
+      # 🔍 DEBUG STEP (TEMPORARY)
+      - name: Debug secret injection
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -27,3 +32,27 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+        run: |
+          echo "==== SECRET INJECTION CHECK ===="
+
+          [ -z "$SUPABASE_URL" ] && echo "SUPABASE_URL ❌ MISSING" || echo "SUPABASE_URL ✅ PRESENT"
+          [ -z "$SUPABASE_KEY" ] && echo "SUPABASE_KEY ❌ MISSING" || echo "SUPABASE_KEY ✅ PRESENT"
+          [ -z "$GEMINI_API_KEY" ] && echo "GEMINI_API_KEY ❌ MISSING" || echo "GEMINI_API_KEY ✅ PRESENT"
+          [ -z "$SMTP_SERVER" ] && echo "SMTP_SERVER ❌ MISSING" || echo "SMTP_SERVER ✅ PRESENT"
+          [ -z "$SMTP_PORT" ] && echo "SMTP_PORT ❌ MISSING" || echo "SMTP_PORT ✅ PRESENT"
+          [ -z "$SENDER_EMAIL" ] && echo "SENDER_EMAIL ❌ MISSING" || echo "SENDER_EMAIL ✅ PRESENT"
+          [ -z "$SENDER_PASSWORD" ] && echo "SENDER_PASSWORD ❌ MISSING" || echo "SENDER_PASSWORD ✅ PRESENT"
+
+          echo "================================"
+
+      # 🚀 ACTUAL JOB
+      - name: Run worker
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+        run: python worker.py
