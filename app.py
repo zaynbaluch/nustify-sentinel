@@ -28,9 +28,9 @@ tab_feed, tab_sources, tab_subs = st.tabs(["📢 Feed", "🔗 Sources", "📧 Su
 # 📢 FEED TAB
 # ==========================================
 with tab_feed:
-    if st.button("🔄 Scan for Updates", on_click=trigger_scan):
-        st.info("Scanning pages...")
-        print("ℹ️ Manual scan button pressed")
+    # if st.button("🔄 Scan for Updates", on_click=trigger_scan):
+    #     st.info("Scanning pages...")
+    #     print("ℹ️ Manual scan button pressed")
 
     # Only run scan when triggered
     if st.session_state.scan_trigger:

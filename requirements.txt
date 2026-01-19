@@ -6,3 +6,6 @@ trafilatura
 playwright
 google-generativeai
 python-dotenv
+beautifulsoup4
+lxml
+urllib3
