@@ -15,6 +15,11 @@ def send_alert(title, summary, url):
         plain = str(summary)
         html = plain.replace("\n", "<br>")
 
+    # 🔹 URL ADDITION (plain + html)
+    if url:
+        plain += f"\n\nPage link:\n{url}"
+        html += f'<br><br><a href="{url}" target="_blank">{url}</a>'
+
     msg = EmailMessage()
     msg["Subject"] = f"🚨 NUSTIFY-SENTINEL Alert: {title}"
     msg["From"] = os.getenv("SENDER_EMAIL")
